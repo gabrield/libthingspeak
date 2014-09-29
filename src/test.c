@@ -15,7 +15,8 @@ int main(int argc, char **argv)
 
 	ts_datastream_update(ctx, 0, "field2", &data);
 
-	printf("JSON:\n%s\n", ts_datastream_get(ctx, 0, TS_DATA_JSON));
+	printf("\n\nJSON:\n%s\n", ts_feed_get_all(ctx, 0, TS_DATA_JSON));
+	printf("\n\nCSV:\n%s\n", ts_datastream_get(ctx, 0, TS_DATA_CSV, "field2"));
 
 	ts_delete_context(ctx);
 	return 0;

@@ -95,13 +95,44 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
 
 
 
-char *ts_datastream_get(ts_context_t* ctx, ts_feed_id_t feed_id, ts_data_type_t type)
+char *ts_datastream_get(ts_context_t *ctx, ts_feed_id_t feed_id, ts_data_type_t type, char *datastream_id)
+{
+    char *ans       = NULL;
+    uint32_t id     = 0;
+    char  page[128] = {0};
+    char  d_id[2]   = {0}; 
+
+    id = (feed_id == 0) ? ctx->feed_id : feed_id;
+    sscanf(datastream_id, "field%s", d_id);
+
+    switch(type)
+    {
+        case TS_DATA_CSV:
+            sprintf(page, "/channels/%d/feeds/%s.csv", id, d_id);
+            break;
+        case TS_DATA_XML:
+            sprintf(page, "/channels/%d/feeds/%s.xml", id, d_id);
+            break;
+        case TS_DATA_JSON:
+            sprintf(page, "/channels/%d/feeds/%s.json", id, d_id);
+            break;
+    }
+
+#if TS_DEBUG
+    printf("%s\n", page);
+#endif
+
+    ans = ts_http_get(HOST_API, page);
+
+    return ans;
+}
+
+
+char *ts_feed_get_all(ts_context_t* ctx, ts_feed_id_t feed_id, ts_data_type_t type)
 {
     char *ans          = NULL;
     uint32_t id        = 0;
     char  page[128] = {0};
-//    ts_context_t* tsx  = NULL;
-// http://api.thingspeak.com/channels/16258/feeds.json
 
 
     id = (feed_id == 0) ? ctx->feed_id : feed_id;
