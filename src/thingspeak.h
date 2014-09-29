@@ -10,9 +10,9 @@
 #define TS_VALUE_STRING_MAX_SIZE 16
 
 #if defined(_WIN64) || defined(_WIN32)
-    #define MEM_SIZE(p)  (int)_msize((void*)p)
+    #define MEM_SIZE(p)  _msize((void*)p)
 #else
-    #define MEM_SIZE(p)  (int)malloc_usable_size((void*)p)
+    #define MEM_SIZE(p)  malloc_usable_size((void*)p)
 #endif
 
 typedef uint32_t ts_feed_id_t;

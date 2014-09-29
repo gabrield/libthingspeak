@@ -16,7 +16,6 @@ int main(int argc, char **argv)
 	ctx = ts_create_context(argv[1], atoi(argv[2]));
 	result = (char*)malloc(sizeof(char)*MAXLINE);
 	bzero(result, MAXLINE);
-    printf("LEN = %d\n", MEM_SIZE(result));
 
 	ts_set_value_i32(&data, 31);
 	/*ts_http_post(ctx, HOST_API, "/update", "field1=0&field2=36&field3=21324");
