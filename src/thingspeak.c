@@ -75,9 +75,7 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
 
 
     if(feed_id == 0)
-    {
         n = ts_http_post(ctx, HOST_API, "/update", num);
-    }
     else
     {
         tsx = ts_create_context(ctx->api_key, feed_id);
@@ -85,17 +83,19 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
         {
             n = ts_http_post(ctx, HOST_API, "/update", num);
             ts_delete_context(tsx);
-            return (n > 0) ? 0 : 1;
         }
         else
             return -1;
     }
-    return 0;
+    return (n > 0) ? 0 : 1;
 }
 
 
 
-char *ts_datastream_get(ts_context_t *ctx, ts_feed_id_t feed_id, ts_data_type_t type, char *datastream_id)
+char *ts_datastream_get(ts_context_t *ctx, ts_feed_id_t feed_id,
+                                           ts_data_type_t type,
+                                           char *datastream_id,
+                                           char *result)
 {
     char *ans       = NULL;
     uint32_t id     = 0;
@@ -122,13 +122,15 @@ char *ts_datastream_get(ts_context_t *ctx, ts_feed_id_t feed_id, ts_data_type_t 
     printf("%s\n", page);
 #endif
 
-    ans = ts_http_get(HOST_API, page);
+    ans = ts_http_get(HOST_API, page, result);
 
     return ans;
 }
 
 
-char *ts_feed_get_all(ts_context_t* ctx, ts_feed_id_t feed_id, ts_data_type_t type)
+char *ts_feed_get_all(ts_context_t* ctx, ts_feed_id_t feed_id,
+                                         ts_data_type_t type,
+                                         char *result)
 {
     char *ans          = NULL;
     uint32_t id        = 0;
@@ -154,7 +156,7 @@ char *ts_feed_get_all(ts_context_t* ctx, ts_feed_id_t feed_id, ts_data_type_t ty
     printf("%s\n", page);
 #endif    
 
-    ans = ts_http_get(HOST_API, page);
+    ans = ts_http_get(HOST_API, page, result);
 
 
     return ans;

@@ -1,6 +1,6 @@
 CC=gcc
 DEBUG=
-CFLAGS=-c -Wall -std=gnu99  -I. $(DEBUG)
+CFLAGS=-c -Wall -pedantic -I. $(DEBUG)
 
 LDFLAGS=
 #SOURCES=apc220_reader.c serial_lib.c

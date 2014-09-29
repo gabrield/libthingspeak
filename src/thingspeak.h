@@ -3,10 +3,17 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <malloc.h>
 
 #define TS_MAX_DATASTREAMS       16
 #define TS_MAX_DATASTREAM_NAME   16
 #define TS_VALUE_STRING_MAX_SIZE 16
+
+#if defined(_WIN64) || defined(_WIN32)
+    #define MEM_SIZE(p)  (int)_msize((void*)p)
+#else
+    #define MEM_SIZE(p)  (int)malloc_usable_size((void*)p)
+#endif
 
 typedef uint32_t ts_feed_id_t;
 
@@ -92,10 +99,10 @@ float ts_get_value_f32(ts_datapoint_t *);
 
 /* Datastream functions */
 int32_t ts_datastream_update(ts_context_t *, ts_feed_id_t, char *, ts_datapoint_t *);
-char   *ts_datastream_get(ts_context_t *, ts_feed_id_t, ts_data_type_t, char *);
+char   *ts_datastream_get(ts_context_t *, ts_feed_id_t, ts_data_type_t, char *, char *);
 
 
 /* Datastream functions */
-char *ts_feed_get_all(ts_context_t *, ts_feed_id_t,  ts_data_type_t type);
+char *ts_feed_get_all(ts_context_t *, ts_feed_id_t,  ts_data_type_t type, char *);
 
 #endif

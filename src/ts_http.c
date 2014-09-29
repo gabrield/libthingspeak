@@ -41,7 +41,7 @@ ssize_t ts_http_post(ts_context_t *ctx, char *host, char *page, char *poststr)
          "Connection: close\r\n"
          "X-THINGSPEAKAPIKEY: %s\r\n"
          "Content-Type: application/x-www-form-urlencoded\r\n"
-         "Content-Length: %zu\r\n\r\n"
+         "Content-Length: %lu\r\n\r\n"
          "%s",
          page, 
          host,
@@ -69,36 +69,33 @@ ssize_t ts_http_post(ts_context_t *ctx, char *host, char *page, char *poststr)
 
 
 
-char *ts_http_get(char *host, char *page)
+char *ts_http_get(char *host, char *page, char *buffer)
 {
     int sockfd;
     FILE *sockwrap = NULL;
     struct sockaddr_in servaddr;
-    char buffer[MAXLINE];
+    /*char buffer[MAXLINE];*/
     ssize_t n;
     struct hostent *hptr;
     char hstr[50];
-    char *http_ans = NULL;
+    /*char *http_ans = NULL;*/
     int headers = 1;
     
 
 
     if ((hptr = gethostbyname(host)) == NULL) {
-        fprintf(stderr, "gethostbyname error for host: %s: %s",
-            host, hstrerror(h_errno));
+        fprintf(stderr, "gethostbyname error for host: %s: %s", host, hstrerror(h_errno));
         return NULL;
     }
 
 #if TS_DEBUG    
     printf("hostname: %s\n", hptr->h_name);
-#endif    
-    if ((hptr->h_addrtype == AF_INET) && (hptr->h_addr_list) != NULL) {
+#endif
+
+    if ((hptr->h_addrtype == AF_INET) && (hptr->h_addr_list) != NULL)
         inet_ntop(hptr->h_addrtype, hptr->h_addr_list[0], hstr, sizeof(hstr));
-    } 
     else
-    {
         fprintf(stderr, "Error call inet_ntop \n");
-    }
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     bzero(&servaddr, sizeof(servaddr));
@@ -121,7 +118,7 @@ char *ts_http_get(char *host, char *page)
 
     sockwrap = fdopen(sockfd, "r");
 
-    if(fgets(buffer, sizeof(buffer), sockwrap) == NULL)
+    if(fgets(buffer, MEM_SIZE(buffer), sockwrap) == NULL)
     {
             if (ferror(sockwrap))
                    fprintf(stderr, "Error sockwrap\n");
@@ -140,7 +137,7 @@ char *ts_http_get(char *host, char *page)
 
     while(headers)
     {
-        if (fgets(buffer, sizeof(buffer), sockwrap) == NULL)
+        if (fgets(buffer, MEM_SIZE(buffer), sockwrap) == NULL)
         {
             if(ferror(sockwrap))
                 fprintf(stderr, "Error sockwrap\n");
@@ -152,15 +149,10 @@ char *ts_http_get(char *host, char *page)
             headers = 0;
     }
 
-
-    fread(buffer, strlen(buffer), sizeof(buffer), sockwrap);
     
-
-    /*printf("%s", buffer);*/
+    fread(buffer, strlen(buffer), MEM_SIZE(buffer), sockwrap);
     fclose(sockwrap);
     close(sockfd);
 
-    http_ans = (char*) buffer;
-    
-    return http_ans;
+    return buffer;
 }
