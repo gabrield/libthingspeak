@@ -55,11 +55,17 @@ float ts_get_value_f32(ts_datapoint_t *datapoint)
 
 int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * datastream_id, ts_datapoint_t *datapoint)
 {
-    char  num[128]    = {0};
+    char  num[200]    = {0};
     ssize_t n         = 0;
-    ts_context_t* tsx = NULL;
+    ts_context_t *tsx = NULL;
+    struct tm *timeinfo;
 
-
+    if(datapoint->timestamp <= 0)
+    {
+        time((time_t*)&datapoint->timestamp);
+        timeinfo = localtime((time_t*)&datapoint->timestamp);
+    }
+        
     switch(datapoint->value_type)
     {
         case TS_VALUE_TYPE_I32:
@@ -72,6 +78,14 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
             sprintf(num, "%s=%s", datastream_id, datapoint->value.str_value);
             break;
     }
+    
+    sprintf(num, "%s&created_at=%d-%d-%d %d:%d:%d", num, (1900/*unix time start*/+timeinfo->tm_year), (timeinfo->tm_mon+1)
+                                                                                                     , timeinfo->tm_mday
+                                                                                                     , timeinfo->tm_hour
+                                                                                                     , timeinfo->tm_min
+                                                                                                     , timeinfo->tm_sec);
+                                                                                    
+    printf("%s\n", num);
 
 
     if(feed_id == 0)
@@ -132,8 +146,8 @@ char *ts_feed_get_all(ts_context_t* ctx, ts_feed_id_t feed_id,
                                          ts_data_type_t type,
                                          char *result)
 {
-    char *ans          = NULL;
-    uint32_t id        = 0;
+    char *ans       = NULL;
+    uint32_t id     = 0;
     char  page[128] = {0};
 
 

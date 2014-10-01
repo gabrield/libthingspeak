@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	result = (char*)malloc(sizeof(char)*MAXLINE);
 	bzero(result, MAXLINE);
 
-	ts_set_value_i32(&data, 31);
+	ts_set_value_i32(&data, 45);
 	/*ts_http_post(ctx, HOST_API, "/update", "field1=0&field2=36&field3=21324");
 	printf("%s\n", ts_http_get(HOST_API, "/channels/16258/feed.json"));*/
 
