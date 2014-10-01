@@ -84,8 +84,9 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
                                                                                                      , timeinfo->tm_hour
                                                                                                      , timeinfo->tm_min
                                                                                                      , timeinfo->tm_sec);
-                                                                                    
+#if TS_DEBUG                                                                                    
     printf("%s\n", num);
+#endif
 
 
     if(feed_id == 0)
