@@ -93,14 +93,20 @@ typedef struct
 /*Context functions*/
 ts_context_t *ts_create_context(char *, ts_feed_id_t);
 void          ts_delete_context(ts_context_t *);
+
+
 /*Datapoint values functions */
 ts_datapoint_t *ts_set_value_i32(ts_datapoint_t *, int32_t);
 int32_t         ts_get_value_i32(ts_datapoint_t *);
 ts_datapoint_t *ts_set_value_f32(ts_datapoint_t *, float);
 float           ts_get_value_f32(ts_datapoint_t *);
+
+
 /* Datastream functions */
 int32_t ts_datastream_update(ts_context_t *, ts_feed_id_t, char *, ts_datapoint_t *);
 char   *ts_datastream_get(ts_context_t *, ts_feed_id_t, ts_data_type_t, char *, char *);
+
+
 /* Datastream functions */
 char *ts_feed_get_all(ts_context_t *, ts_feed_id_t,  ts_data_type_t type, char *);
 
