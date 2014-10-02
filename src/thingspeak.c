@@ -1,5 +1,6 @@
 #include <thingspeak.h>
 #include <ts_http.h>
+#include <ts_time.h>
 
 
 ts_context_t *ts_create_context(char *api_key, ts_feed_id_t feed_id)
@@ -53,18 +54,16 @@ float ts_get_value_f32(ts_datapoint_t *datapoint)
 }
 
 
-int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * datastream_id, ts_datapoint_t *datapoint)
+int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * datastream_id,
+                                                                      ts_datapoint_t *datapoint)
 {
     char  num[200]    = {0};
     ssize_t n         = 0;
     ts_context_t *tsx = NULL;
-    struct tm *timeinfo;
+    ts_tm_t *timeinfo;
 
     if(datapoint->timestamp <= 0)
-    {
-        time((time_t*)&datapoint->timestamp);
-        timeinfo = localtime((time_t*)&datapoint->timestamp);
-    }
+        timeinfo = ts_settime(datapoint, TS_TIME_LOCAL);
         
     switch(datapoint->value_type)
     {
@@ -79,11 +78,12 @@ int32_t ts_datastream_update(ts_context_t* ctx, ts_feed_id_t feed_id, char * dat
             break;
     }
     
-    sprintf(num, "%s&created_at=%d-%d-%d %d:%d:%d", num, (1900/*unix time start*/+timeinfo->tm_year), (timeinfo->tm_mon+1)
-                                                                                                     , timeinfo->tm_mday
-                                                                                                     , timeinfo->tm_hour
-                                                                                                     , timeinfo->tm_min
-                                                                                                     , timeinfo->tm_sec);
+    sprintf(num, "%s&created_at=%d-%d-%d %d:%d:%d", num, (1900/*unix time start*/+timeinfo->tm_year),
+                                                                                (timeinfo->tm_mon+1),
+                                                                                   timeinfo->tm_mday,
+                                                                                   timeinfo->tm_hour,
+                                                                                    timeinfo->tm_min, 
+                                                                                   timeinfo->tm_sec);
 #if TS_DEBUG                                                                                    
     printf("%s\n", num);
 #endif

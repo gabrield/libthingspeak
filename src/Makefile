@@ -4,7 +4,7 @@ CFLAGS=-c -Wall -pedantic -I. $(DEBUG)
 
 LDFLAGS=
 #SOURCES=apc220_reader.c serial_lib.c
-SOURCES=thingspeak.c ts_http.c test.c
+SOURCES=thingspeak.c ts_http.c ts_time.c test.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=test
 #EXECUTABLE

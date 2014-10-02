@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include <time.h> 
 #include <malloc.h>
 
 #define TS_MAX_DATASTREAMS       16
@@ -20,7 +19,7 @@
 
 
 typedef uint32_t ts_feed_id_t;
-typedef long     ts_timestamp_t;
+typedef     long ts_timestamp_t;
 
 
 /** Datapoint value types */
